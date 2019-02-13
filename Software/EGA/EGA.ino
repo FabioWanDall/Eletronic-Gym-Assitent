@@ -13,9 +13,6 @@
 //Pinos de ligacao do encoder
 RotaryEncoder encoder(A2, A3);
 
-//Define os pinos que serão utilizados para ligação ao display
-LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
-
 enum e_modo{
   CONTA_REPETICAO,
   CONTA_DESCANSO,
@@ -24,13 +21,6 @@ enum e_modo{
   FIM
 };
 e_modo modo_atual = CONTA_REPETICAO;
-
-int pin_buzzer = 10;
-
-int pin_sw_enter = 8;
-int pin_sw_esc = 9;
-int pin_sw_inc = 11; //increment
-int pin_sw_dec = 12; //decrement
 
 //Variavel para o encoder
 int pin_sw_encoder = 13;
@@ -62,12 +52,7 @@ void setup(){
   Serial.begin(9600);
   Serial.println("The System is Alive");
 
-  pinMode(pin_buzzer,OUTPUT); //Pino do buzzer
-
   pinMode(pin_sw_enter, INPUT_PULLUP);
-  //pinMode(pin_sw_esc, INPUT_PULLUP);
-  //pinMode(pin_sw_inc, INPUT_PULLUP);
-  //pinMode(pin_sw_dec, INPUT_PULLUP);
 
   //Define o número de colunas e linhas do LCD
   lcd.begin(16, 2);
@@ -75,7 +60,7 @@ void setup(){
   //define uma posição alta para nao haver troca de sinais(causa estouro)
   encoder.setPosition(initialPosition);
 
-  //Inicializa e define funçao
+  //Inicializa e define funçao do timer
   Timer1.initialize(1000000);
   Timer1.attachInterrupt(callback);
   
@@ -109,7 +94,7 @@ void callback() {
   cont_time++;
 }
 
-void toca_alerta_repeticoes_programado(){
+void toca_alerta_repeticoes_programado() {
   int frequencia = 0;
   int tempo = 1;
   
@@ -298,7 +283,6 @@ void change_state(e_modo novo_modo){
       lcd.clear();
     break;  
   }
-  
 }
 
 void verifica_teclado(){
