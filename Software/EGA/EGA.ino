@@ -239,7 +239,7 @@ void modo_conta_serie(){
     //---dar algum aviso de fim---
     lcd.setCursor(10, 1);
     
-	//lcd.print("S#");
+  //lcd.print("S#");
     //---deligar sistema---
     delay(1000);
     change_state(FIM);
@@ -255,7 +255,7 @@ void modo_conta_descanso(){
   tela_timer_descanso();
   if(cont_time > tempo_descanso_programado){
     change_state(CONTA_REPETICAO);
-	toca_alerta_repeticoes_programado();
+  toca_alerta_repeticoes_programado();
   }
 }
 
@@ -277,7 +277,7 @@ void change_state(e_modo novo_modo){
   switch(novo_modo){
     case  CONTA_REPETICAO:
       modo_atual = CONTA_REPETICAO;
-	  avisou = false; //aviso que o numero de repetiçoes foi alcançado
+    avisou = false; //aviso que o numero de repetiçoes foi alcançado
       time_of_last_move = 100;//posso zerar o cont_timer e usar esse 100 como um time out de maquina parada(nao sei bem)
       lcd.clear();
       tela_cont_repeticoes();
@@ -302,42 +302,42 @@ void change_state(e_modo novo_modo){
 }
 
 void verifica_teclado(){
-	int valor = digitalRead(8);
-	if (valor != 1)
-	{
-		Serial.println("Botao 8 pressionado");
-		while (digitalRead(8) == 0)
-			delay(10);
-	}
-	valor = digitalRead(9);
-	if (valor != 1)
-	{
-		Serial.println("Botao 9 pressionado");
-		while (digitalRead(9) == 0)
-			delay(10);
-	}
-	valor = digitalRead(11);
-	if (valor != 1)
-	{
-		Serial.println("Botao 11 pressionado");
-		while (digitalRead(11) == 0)
-			delay(10);
-	}
-	valor = digitalRead(12);
-	if (valor != 1)
-	{
-		Serial.println("Botao 12 pressionado");
-		while (digitalRead(12) == 0)
-			delay(10);
-	}
-	valor = digitalRead(13);
-	if (valor != 1)
-	{
-		Serial.println("Encoder pressionado");
-		while (digitalRead(7) == 0)
-			delay(10);
-	}
-	
+  int valor = digitalRead(8);
+  if (valor != 1)
+  {
+    Serial.println("Botao 8 pressionado");
+    while (digitalRead(8) == 0)
+      delay(10);
+  }
+  valor = digitalRead(9);
+  if (valor != 1)
+  {
+    Serial.println("Botao 9 pressionado");
+    while (digitalRead(9) == 0)
+      delay(10);
+  }
+  valor = digitalRead(11);
+  if (valor != 1)
+  {
+    Serial.println("Botao 11 pressionado");
+    while (digitalRead(11) == 0)
+      delay(10);
+  }
+  valor = digitalRead(12);
+  if (valor != 1)
+  {
+    Serial.println("Botao 12 pressionado");
+    while (digitalRead(12) == 0)
+      delay(10);
+  }
+  valor = digitalRead(13);
+  if (valor != 1)
+  {
+    Serial.println("Encoder pressionado");
+    while (digitalRead(7) == 0)
+      delay(10);
+  }
+  
 }
 
 void loop(){
@@ -353,9 +353,9 @@ void loop(){
     break;  
     case  FIM:
       escreve_display("  !!!FESHOW!!!");
-	  toca_alerta_repeticoes_programado();
-	  toca_alerta_repeticoes_programado();
-	  toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
       delay(3000);
     break;  
   }
