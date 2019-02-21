@@ -13,6 +13,9 @@
 //Pinos de ligacao do encoder
 RotaryEncoder encoder(A2, A3);
 
+//Define os pinos que serão utilizados para ligação ao display
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
+
 enum e_modo{
   CONTA_REPETICAO,
   CONTA_DESCANSO,
@@ -21,6 +24,13 @@ enum e_modo{
   FIM
 };
 e_modo modo_atual = CONTA_REPETICAO;
+
+int pin_buzzer = 10;
+
+int pin_sw_enter = 8;
+int pin_sw_esc = 9;
+int pin_sw_inc = 11; //increment
+int pin_sw_dec = 12; //decrement
 
 //Variavel para o encoder
 int pin_sw_encoder = 13;
@@ -52,7 +62,12 @@ void setup(){
   Serial.begin(9600);
   Serial.println("The System is Alive");
 
+  pinMode(pin_buzzer,OUTPUT); //Pino do buzzer
+
   pinMode(pin_sw_enter, INPUT_PULLUP);
+  //pinMode(pin_sw_esc, INPUT_PULLUP);
+  //pinMode(pin_sw_inc, INPUT_PULLUP);
+  //pinMode(pin_sw_dec, INPUT_PULLUP);
 
   //Define o número de colunas e linhas do LCD
   lcd.begin(16, 2);
@@ -60,7 +75,7 @@ void setup(){
   //define uma posição alta para nao haver troca de sinais(causa estouro)
   encoder.setPosition(initialPosition);
 
-  //Inicializa e define funçao do timer
+  //Inicializa e define funçao
   Timer1.initialize(1000000);
   Timer1.attachInterrupt(callback);
   
@@ -94,7 +109,7 @@ void callback() {
   cont_time++;
 }
 
-void toca_alerta_repeticoes_programado() {
+void toca_alerta_repeticoes_programado(){
   int frequencia = 0;
   int tempo = 1;
   
@@ -224,7 +239,7 @@ void modo_conta_serie(){
     //---dar algum aviso de fim---
     lcd.setCursor(10, 1);
     
-	//lcd.print("S#");
+  //lcd.print("S#");
     //---deligar sistema---
     delay(1000);
     change_state(FIM);
@@ -240,7 +255,7 @@ void modo_conta_descanso(){
   tela_timer_descanso();
   if(cont_time > tempo_descanso_programado){
     change_state(CONTA_REPETICAO);
-	toca_alerta_repeticoes_programado();
+  toca_alerta_repeticoes_programado();
   }
 }
 
@@ -262,7 +277,7 @@ void change_state(e_modo novo_modo){
   switch(novo_modo){
     case  CONTA_REPETICAO:
       modo_atual = CONTA_REPETICAO;
-	  avisou = false; //aviso que o numero de repetiçoes foi alcançado
+    avisou = false; //aviso que o numero de repetiçoes foi alcançado
       time_of_last_move = 100;//posso zerar o cont_timer e usar esse 100 como um time out de maquina parada(nao sei bem)
       lcd.clear();
       tela_cont_repeticoes();
@@ -283,45 +298,46 @@ void change_state(e_modo novo_modo){
       lcd.clear();
     break;  
   }
+  
 }
 
 void verifica_teclado(){
-	int valor = digitalRead(8);
-	if (valor != 1)
-	{
-		Serial.println("Botao 8 pressionado");
-		while (digitalRead(8) == 0)
-			delay(10);
-	}
-	valor = digitalRead(9);
-	if (valor != 1)
-	{
-		Serial.println("Botao 9 pressionado");
-		while (digitalRead(9) == 0)
-			delay(10);
-	}
-	valor = digitalRead(11);
-	if (valor != 1)
-	{
-		Serial.println("Botao 11 pressionado");
-		while (digitalRead(11) == 0)
-			delay(10);
-	}
-	valor = digitalRead(12);
-	if (valor != 1)
-	{
-		Serial.println("Botao 12 pressionado");
-		while (digitalRead(12) == 0)
-			delay(10);
-	}
-	valor = digitalRead(13);
-	if (valor != 1)
-	{
-		Serial.println("Encoder pressionado");
-		while (digitalRead(7) == 0)
-			delay(10);
-	}
-	
+  int valor = digitalRead(8);
+  if (valor != 1)
+  {
+    Serial.println("Botao 8 pressionado");
+    while (digitalRead(8) == 0)
+      delay(10);
+  }
+  valor = digitalRead(9);
+  if (valor != 1)
+  {
+    Serial.println("Botao 9 pressionado");
+    while (digitalRead(9) == 0)
+      delay(10);
+  }
+  valor = digitalRead(11);
+  if (valor != 1)
+  {
+    Serial.println("Botao 11 pressionado");
+    while (digitalRead(11) == 0)
+      delay(10);
+  }
+  valor = digitalRead(12);
+  if (valor != 1)
+  {
+    Serial.println("Botao 12 pressionado");
+    while (digitalRead(12) == 0)
+      delay(10);
+  }
+  valor = digitalRead(13);
+  if (valor != 1)
+  {
+    Serial.println("Encoder pressionado");
+    while (digitalRead(7) == 0)
+      delay(10);
+  }
+  
 }
 
 void loop(){
@@ -337,9 +353,9 @@ void loop(){
     break;  
     case  FIM:
       escreve_display("  !!!FESHOW!!!");
-	  toca_alerta_repeticoes_programado();
-	  toca_alerta_repeticoes_programado();
-	  toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
+    toca_alerta_repeticoes_programado();
       delay(3000);
     break;  
   }
