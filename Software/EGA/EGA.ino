@@ -6,13 +6,17 @@
 
 //Carrega a biblioteca do encoder
 #include <RotaryEncoder.h>
-
-//Carrega a biblioteca LiquidCrystal
-#include <LiquidCrystal.h>
-
 //Pinos de ligacao do encoder
 RotaryEncoder encoder(A2, A3);
 
+//Carrega biblioteca para ter uma nova porta serial
+#include <SoftwareSerial.h>
+//Pinos da porta serial
+SoftwareSerial BT(10, 11); //RX, TX
+
+/**Morrera em breve**/
+//Carrega a biblioteca LiquidCrystal
+#include <LiquidCrystal.h>
 //Define os pinos que serão utilizados para ligação ao display
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
@@ -25,8 +29,10 @@ enum e_modo{
 };
 e_modo modo_atual = CONTA_REPETICAO;
 
+/**Morrera em breve**/
 int pin_buzzer = 10;
 
+/**Morrera em breve**/
 int pin_sw_enter = 8;
 int pin_sw_esc = 9;
 int pin_sw_inc = 11; //increment
@@ -34,7 +40,10 @@ int pin_sw_dec = 12; //decrement
 
 //Variavel para o encoder
 int pin_sw_encoder = 13;
+
+/**Morrera em breve**/
 int valor_sw = 0;
+
 int newposition = 0;
 int position = 0;
 int initialPosition = 100;
@@ -49,7 +58,6 @@ int cont_series = 0;//conta a quantidade de series ja feitas
 int time_of_last_move = 0;//guarda o tempo do ultimo movimento para determinar time out na execucao
 int tempo_timeout_execucao = 3;//tempo maximo aceito sem movimento(MEDIDO EM SEGUNDOS)
 
-
 int minimo_movimento = 5; //define qual o movimento minimo no sentido anti-horario para validar uma execucao  (PODERA SER ALTERADA PELO USUARIO)
 int numero_repeticoes_programado = 5; //define a quantidade de repeticoes que deverao ser executadas          (PODERA SER ALTERADA PELO USUARIO)
 int tempo_descanso_programado = 10; //define quantos SEGUNDOS de descanso                                     (PODERA SER ALTERADA PELO USUARIO)
@@ -62,13 +70,19 @@ void setup(){
   Serial.begin(9600);
   Serial.println("The System is Alive");
 
+  //HC-05 usually default baud-rate
+  BT.begin(9600); 
+  
+  /**Morrera em breve**/
   pinMode(pin_buzzer,OUTPUT); //Pino do buzzer
 
+  /**Morrera em breve**/
   pinMode(pin_sw_enter, INPUT_PULLUP);
   //pinMode(pin_sw_esc, INPUT_PULLUP);
   //pinMode(pin_sw_inc, INPUT_PULLUP);
   //pinMode(pin_sw_dec, INPUT_PULLUP);
-
+  
+  /**Morrera em breve**/
   //Define o número de colunas e linhas do LCD
   lcd.begin(16, 2);
 
@@ -87,6 +101,9 @@ void setup(){
 }
 
 void ini(){
+  BT.println("EGA BETA Z");
+  
+  /**Morrera em breve**/
   lcd.setCursor(0, 0);
   lcd.print(" POLLIN MONITOR");
   lcd.setCursor(3, 1);
@@ -109,6 +126,7 @@ void callback() {
   cont_time++;
 }
 
+/**Morrera em breve**/
 void toca_alerta_repeticoes_programado(){
   int frequencia = 0;
   int tempo = 1;
@@ -121,6 +139,12 @@ void toca_alerta_repeticoes_programado(){
 }
 
 void tela_cont_repeticoes(){
+    BT.print("REPETICOES:");
+    BT.print(cont_repeticoes);
+    BT.print("/");
+    BT.println(numero_repeticoes_programado);
+    
+    /**Morrera em breve**/
     //APRESENTA A QUANTIDADE DE REPETICOES REALIZADAS
     //"REPETICOES:XX/XX"
     lcd.setCursor(0, 0);
@@ -132,6 +156,7 @@ void tela_cont_repeticoes(){
     lcd.setCursor(14, 0);
     lcd.print(numero_repeticoes_programado);  
 
+    /**Morrera em breve**/
     //---teste---
     //APRESENTA POSICAO DO ENCODER
     //"POS:XXX"
@@ -142,6 +167,10 @@ void tela_cont_repeticoes(){
 }
 
 void tela_timer(){
+    BT.print("TIME:");
+    BT.println(cont_time); 
+  
+    /**Morrera em breve**/
     //APRESENTACAO DO TIMER
     lcd.setCursor(8, 1);
     lcd.print("TIME:");
@@ -150,6 +179,12 @@ void tela_timer(){
 }
 
 void tela_timer_descanso(){
+    BT.print("TEMPO DESCANSO:");
+    BT.print(cont_time);
+    BT.print("/");
+    BT.println(tempo_descanso_programado); 
+  
+    /**Morrera em breve**/
     //APRESENTACAO DO TIMER REGRECIVO 
     lcd.setCursor(0, 0);
     lcd.print("TEMPO DESCANSO:");
