@@ -1,6 +1,7 @@
 //Programa :
 //Autor :
 
+/**Morrera em breve**/
 //Carrega a biblioteca para utilizar o TIMER1
 #include "TimerOne.h"
 
@@ -9,10 +10,10 @@
 //Pinos de ligacao do encoder
 RotaryEncoder encoder(A2, A3);
 
-//Carrega biblioteca para ter uma nova porta serial
-#include <SoftwareSerial.h>
-//Pinos da porta serial
-SoftwareSerial BT(10, 11); //RX, TX
+//Carrega biblioteca da porta serial via software
+#include <AltSoftSerial.h>
+//Arduino Uno pins TX(9) RX(8) PWM Unusable(10)
+AltSoftSerial BT;
 
 /**Morrera em breve**/
 //Carrega a biblioteca LiquidCrystal
@@ -30,11 +31,11 @@ enum e_modo{
 e_modo modo_atual = CONTA_REPETICAO;
 
 /**Morrera em breve**/
-int pin_buzzer = 10;
+int pin_buzzer = 11;
 
 /**Morrera em breve**/
-int pin_sw_enter = 8;
-int pin_sw_esc = 9;
+//int pin_sw_enter = 8;
+//int pin_sw_esc = 9;
 int pin_sw_inc = 11; //increment
 int pin_sw_dec = 12; //decrement
 
@@ -72,31 +73,19 @@ void setup(){
 
   //HC-05 usually default baud-rate
   BT.begin(9600); 
+  BT.println("Hello Mama");
   
   /**Morrera em breve**/
-  pinMode(pin_buzzer,OUTPUT); //Pino do buzzer
-
-  /**Morrera em breve**/
-  pinMode(pin_sw_enter, INPUT_PULLUP);
-  //pinMode(pin_sw_esc, INPUT_PULLUP);
-  //pinMode(pin_sw_inc, INPUT_PULLUP);
-  //pinMode(pin_sw_dec, INPUT_PULLUP);
-  
-  /**Morrera em breve**/
-  //Define o número de colunas e linhas do LCD
-  lcd.begin(16, 2);
-
-  //define uma posição alta para nao haver troca de sinais(causa estouro)
-  encoder.setPosition(initialPosition);
-
   //Inicializa e define funçao
-  Timer1.initialize(1000000);
-  Timer1.attachInterrupt(callback);
+  //Timer1.initialize(1000000);
+  //Timer1.attachInterrupt(callback);
   
   // You may have to modify the next 2 lines if using other pins than A2 and A3
   PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
   PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
 
+  
+  BT.println("ini()");
   ini();
 }
 
