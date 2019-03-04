@@ -1,18 +1,23 @@
 //Programa :
 //Autor :
 
+/**Morrera em breve**/
 //Carrega a biblioteca para utilizar o TIMER1
 #include "TimerOne.h"
 
 //Carrega a biblioteca do encoder
 #include <RotaryEncoder.h>
-
-//Carrega a biblioteca LiquidCrystal
-#include <LiquidCrystal.h>
-
 //Pinos de ligacao do encoder
 RotaryEncoder encoder(A2, A3);
 
+//Carrega biblioteca da porta serial via software
+#include <AltSoftSerial.h>
+//Arduino Uno pins TX(9) RX(8) PWM Unusable(10)
+AltSoftSerial BT;
+
+/**Morrera em breve**/
+//Carrega a biblioteca LiquidCrystal
+#include <LiquidCrystal.h>
 //Define os pinos que serão utilizados para ligação ao display
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
@@ -25,16 +30,21 @@ enum e_modo{
 };
 e_modo modo_atual = CONTA_REPETICAO;
 
-int pin_buzzer = 10;
+/**Morrera em breve**/
+int pin_buzzer = 11;
 
-int pin_sw_enter = 8;
-int pin_sw_esc = 9;
+/**Morrera em breve**/
+//int pin_sw_enter = 8;
+//int pin_sw_esc = 9;
 int pin_sw_inc = 11; //increment
 int pin_sw_dec = 12; //decrement
 
 //Variavel para o encoder
 int pin_sw_encoder = 13;
+
+/**Morrera em breve**/
 int valor_sw = 0;
+
 int newposition = 0;
 int position = 0;
 int initialPosition = 100;
@@ -49,7 +59,6 @@ int cont_series = 0;//conta a quantidade de series ja feitas
 int time_of_last_move = 0;//guarda o tempo do ultimo movimento para determinar time out na execucao
 int tempo_timeout_execucao = 3;//tempo maximo aceito sem movimento(MEDIDO EM SEGUNDOS)
 
-
 int minimo_movimento = 5; //define qual o movimento minimo no sentido anti-horario para validar uma execucao  (PODERA SER ALTERADA PELO USUARIO)
 int numero_repeticoes_programado = 5; //define a quantidade de repeticoes que deverao ser executadas          (PODERA SER ALTERADA PELO USUARIO)
 int tempo_descanso_programado = 10; //define quantos SEGUNDOS de descanso                                     (PODERA SER ALTERADA PELO USUARIO)
@@ -62,36 +71,26 @@ void setup(){
   Serial.begin(9600);
   Serial.println("The System is Alive");
 
-  pinMode(pin_buzzer,OUTPUT); //Pino do buzzer
-
-  pinMode(pin_sw_enter, INPUT_PULLUP);
-  //pinMode(pin_sw_esc, INPUT_PULLUP);
-  //pinMode(pin_sw_inc, INPUT_PULLUP);
-  //pinMode(pin_sw_dec, INPUT_PULLUP);
-
-  //Define o número de colunas e linhas do LCD
-  lcd.begin(16, 2);
-
-  //define uma posição alta para nao haver troca de sinais(causa estouro)
-  encoder.setPosition(initialPosition);
-
+  //HC-05 usually default baud-rate
+  BT.begin(9600); 
+  BT.println("Hello Mama");
+  
+  /**Morrera em breve**/
   //Inicializa e define funçao
-  Timer1.initialize(1000000);
-  Timer1.attachInterrupt(callback);
+  //Timer1.initialize(1000000);
+  //Timer1.attachInterrupt(callback);
   
   // You may have to modify the next 2 lines if using other pins than A2 and A3
   PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
   PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
 
+  
+  BT.println("ini()");
   ini();
 }
 
 void ini(){
-  lcd.setCursor(0, 0);
-  lcd.print(" POLLIN MONITOR");
-  lcd.setCursor(3, 1);
-  lcd.print("      V0.8");
-  delay(1000);
+  BT.println("EGA BETA Y");
 
   position = initialPosition;
   newposition = initialPosition;
@@ -105,11 +104,13 @@ ISR(PCINT1_vect) {
   encoder.tick(); // just call tick() to check the state.
 }
 
-void callback() {
+/**Morrera em breve**/
+/*void callback() {
   cont_time++;
-}
+}*/
 
-void toca_alerta_repeticoes_programado(){
+/**Morrera em breve**/
+/*void toca_alerta_repeticoes_programado(){
   int frequencia = 0;
   int tempo = 1;
   
@@ -118,30 +119,22 @@ void toca_alerta_repeticoes_programado(){
     tone(pin_buzzer, frequencia, tempo); 
     delay(1);
   }
-}
+}*/
 
 void tela_cont_repeticoes(){
-    //APRESENTA A QUANTIDADE DE REPETICOES REALIZADAS
-    //"REPETICOES:XX/XX"
-    lcd.setCursor(0, 0);
-    lcd.print("REPETICOES:");
-    lcd.setCursor(11, 0);
-    lcd.print(cont_repeticoes);  
-    lcd.setCursor(13, 0);
-    lcd.print("/");  
-    lcd.setCursor(14, 0);
-    lcd.print(numero_repeticoes_programado);  
-
-    //---teste---
-    //APRESENTA POSICAO DO ENCODER
-    //"POS:XXX"
-    //lcd.setCursor(0, 1);
-    //lcd.print("POS:");
-    lcd.setCursor(4, 1);
-    lcd.print(newposition);
+    BT.print("REPETICOES:");
+    BT.print(cont_repeticoes);
+    BT.print("/");
+    BT.println(numero_repeticoes_programado);
+    
+    BT.println(newposition);
 }
 
 void tela_timer(){
+    BT.print("TIME:");
+    BT.println(cont_time); 
+  
+    /**Morrera em breve**/
     //APRESENTACAO DO TIMER
     lcd.setCursor(8, 1);
     lcd.print("TIME:");
@@ -150,26 +143,17 @@ void tela_timer(){
 }
 
 void tela_timer_descanso(){
-    //APRESENTACAO DO TIMER REGRECIVO 
-    lcd.setCursor(0, 0);
-    lcd.print("TEMPO DESCANSO:");
-    lcd.setCursor(1, 1);
-    lcd.print(cont_time);  
-    lcd.setCursor(4, 1);
-    lcd.print("/");
-    lcd.setCursor(5, 1);
-    lcd.print(tempo_descanso_programado);  
+    BT.print("TEMPO DESCANSO:");
+    BT.print(cont_time);
+    BT.print("/");
+    BT.println(tempo_descanso_programado); 
 }
 
 void tela_cont_series(){
-  lcd.setCursor(0, 0);
-  lcd.print("SERIES:");
-  lcd.setCursor(8, 0);
-  lcd.print(cont_series);
-  lcd.setCursor(10, 0);
-  lcd.print("/");
-  lcd.setCursor(11, 0);
-  lcd.print(numero_series_programado);  
+  BT.print("SERIES:");
+  BT.print(cont_series);
+  BT.print("/");
+  BT.print(numero_series_programado);  
 }
 
 boolean change_position(){
@@ -213,8 +197,8 @@ boolean timeout_execucao(){
 void modo_conta_repeticao(){
   if(contando_repeticoes() >= numero_repeticoes_programado and !avisou){
     lcd.setCursor(8, 1);
-    //lcd.print("R#");
-    toca_alerta_repeticoes_programado();
+    BT.print("R#_FinishedRepetition");
+    ////toca_alerta_repeticoes_programado();
     avisou = true;
   }
   if(timeout_execucao()){
@@ -223,9 +207,7 @@ void modo_conta_repeticao(){
       cont_repeticoes = 0;
       change_state(CONTA_SERIE);
     }
-    
-    lcd.setCursor(12, 1);
-    //lcd.print("TO");
+    BT.print("TO_TimeOut");
   }
 }
 
@@ -237,9 +219,7 @@ int contando_series(){
 void modo_conta_serie(){
   if(contando_series() >= numero_series_programado){
     //---dar algum aviso de fim---
-    lcd.setCursor(10, 1);
-    
-  //lcd.print("S#");
+    BT.print("S#_FinishedSeries");
     //---deligar sistema---
     delay(1000);
     change_state(FIM);
@@ -255,11 +235,12 @@ void modo_conta_descanso(){
   tela_timer_descanso();
   if(cont_time > tempo_descanso_programado){
     change_state(CONTA_REPETICAO);
-  toca_alerta_repeticoes_programado();
+  ////toca_alerta_repeticoes_programado();
   }
 }
 
-void escreve_display(char Str1[15]){
+/**Morrera em breve**/
+/*void escreve_display(char Str1[15]){
     lcd.clear();
     lcd.setCursor(0, 1);
     lcd.print(Str1);
@@ -271,7 +252,7 @@ void escreve_display(int num){
     lcd.setCursor(0, 1);
     lcd.print(num);
     delay(1000);
-}
+}*/
 
 void change_state(e_modo novo_modo){
   switch(novo_modo){
@@ -301,7 +282,8 @@ void change_state(e_modo novo_modo){
   
 }
 
-void verifica_teclado(){
+/**Morrera em breve**/
+/*void verifica_teclado(){
   int valor = digitalRead(8);
   if (valor != 1)
   {
@@ -338,7 +320,7 @@ void verifica_teclado(){
       delay(10);
   }
   
-}
+}*/
 
 void loop(){
   switch(modo_atual){
@@ -352,13 +334,11 @@ void loop(){
       modo_conta_descanso();
     break;  
     case  FIM:
-      escreve_display("  !!!FESHOW!!!");
-    toca_alerta_repeticoes_programado();
-    toca_alerta_repeticoes_programado();
-    toca_alerta_repeticoes_programado();
+      BT.println("  !!!FESHOW!!!");
+    ////toca_alerta_repeticoes_programado();
       delay(3000);
     break;  
   }
-  //Serial.println(modo_atual);
-  verifica_teclado();
+  ////BT.println(modo_atual);//não da pra ficar enviando as paradas assim dentro do loop
+  //verifica_teclado();
 }
