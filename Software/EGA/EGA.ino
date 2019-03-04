@@ -90,14 +90,7 @@ void setup(){
 }
 
 void ini(){
-  BT.println("EGA BETA Z");
-  
-  /**Morrera em breve**/
-  lcd.setCursor(0, 0);
-  lcd.print(" POLLIN MONITOR");
-  lcd.setCursor(3, 1);
-  lcd.print("      V0.8");
-  delay(1000);
+  BT.println("EGA BETA Y");
 
   position = initialPosition;
   newposition = initialPosition;
@@ -111,12 +104,13 @@ ISR(PCINT1_vect) {
   encoder.tick(); // just call tick() to check the state.
 }
 
-void callback() {
+/**Morrera em breve**/
+/*void callback() {
   cont_time++;
-}
+}*/
 
 /**Morrera em breve**/
-void toca_alerta_repeticoes_programado(){
+/*void toca_alerta_repeticoes_programado(){
   int frequencia = 0;
   int tempo = 1;
   
@@ -125,7 +119,7 @@ void toca_alerta_repeticoes_programado(){
     tone(pin_buzzer, frequencia, tempo); 
     delay(1);
   }
-}
+}*/
 
 void tela_cont_repeticoes(){
     BT.print("REPETICOES:");
@@ -133,26 +127,7 @@ void tela_cont_repeticoes(){
     BT.print("/");
     BT.println(numero_repeticoes_programado);
     
-    /**Morrera em breve**/
-    //APRESENTA A QUANTIDADE DE REPETICOES REALIZADAS
-    //"REPETICOES:XX/XX"
-    lcd.setCursor(0, 0);
-    lcd.print("REPETICOES:");
-    lcd.setCursor(11, 0);
-    lcd.print(cont_repeticoes);  
-    lcd.setCursor(13, 0);
-    lcd.print("/");  
-    lcd.setCursor(14, 0);
-    lcd.print(numero_repeticoes_programado);  
-
-    /**Morrera em breve**/
-    //---teste---
-    //APRESENTA POSICAO DO ENCODER
-    //"POS:XXX"
-    //lcd.setCursor(0, 1);
-    //lcd.print("POS:");
-    lcd.setCursor(4, 1);
-    lcd.print(newposition);
+    BT.println(newposition);
 }
 
 void tela_timer(){
@@ -172,28 +147,13 @@ void tela_timer_descanso(){
     BT.print(cont_time);
     BT.print("/");
     BT.println(tempo_descanso_programado); 
-  
-    /**Morrera em breve**/
-    //APRESENTACAO DO TIMER REGRECIVO 
-    lcd.setCursor(0, 0);
-    lcd.print("TEMPO DESCANSO:");
-    lcd.setCursor(1, 1);
-    lcd.print(cont_time);  
-    lcd.setCursor(4, 1);
-    lcd.print("/");
-    lcd.setCursor(5, 1);
-    lcd.print(tempo_descanso_programado);  
 }
 
 void tela_cont_series(){
-  lcd.setCursor(0, 0);
-  lcd.print("SERIES:");
-  lcd.setCursor(8, 0);
-  lcd.print(cont_series);
-  lcd.setCursor(10, 0);
-  lcd.print("/");
-  lcd.setCursor(11, 0);
-  lcd.print(numero_series_programado);  
+  BT.print("SERIES:");
+  BT.print(cont_series);
+  BT.print("/");
+  BT.print(numero_series_programado);  
 }
 
 boolean change_position(){
@@ -237,8 +197,8 @@ boolean timeout_execucao(){
 void modo_conta_repeticao(){
   if(contando_repeticoes() >= numero_repeticoes_programado and !avisou){
     lcd.setCursor(8, 1);
-    //lcd.print("R#");
-    toca_alerta_repeticoes_programado();
+    BT.print("R#_FinishedRepetition");
+    ////toca_alerta_repeticoes_programado();
     avisou = true;
   }
   if(timeout_execucao()){
@@ -247,9 +207,7 @@ void modo_conta_repeticao(){
       cont_repeticoes = 0;
       change_state(CONTA_SERIE);
     }
-    
-    lcd.setCursor(12, 1);
-    //lcd.print("TO");
+    BT.print("TO_TimeOut");
   }
 }
 
@@ -261,9 +219,7 @@ int contando_series(){
 void modo_conta_serie(){
   if(contando_series() >= numero_series_programado){
     //---dar algum aviso de fim---
-    lcd.setCursor(10, 1);
-    
-  //lcd.print("S#");
+    BT.print("S#_FinishedSeries");
     //---deligar sistema---
     delay(1000);
     change_state(FIM);
@@ -279,11 +235,12 @@ void modo_conta_descanso(){
   tela_timer_descanso();
   if(cont_time > tempo_descanso_programado){
     change_state(CONTA_REPETICAO);
-  toca_alerta_repeticoes_programado();
+  ////toca_alerta_repeticoes_programado();
   }
 }
 
-void escreve_display(char Str1[15]){
+/**Morrera em breve**/
+/*void escreve_display(char Str1[15]){
     lcd.clear();
     lcd.setCursor(0, 1);
     lcd.print(Str1);
@@ -295,7 +252,7 @@ void escreve_display(int num){
     lcd.setCursor(0, 1);
     lcd.print(num);
     delay(1000);
-}
+}*/
 
 void change_state(e_modo novo_modo){
   switch(novo_modo){
@@ -325,7 +282,8 @@ void change_state(e_modo novo_modo){
   
 }
 
-void verifica_teclado(){
+/**Morrera em breve**/
+/*void verifica_teclado(){
   int valor = digitalRead(8);
   if (valor != 1)
   {
@@ -362,7 +320,7 @@ void verifica_teclado(){
       delay(10);
   }
   
-}
+}*/
 
 void loop(){
   switch(modo_atual){
@@ -376,13 +334,11 @@ void loop(){
       modo_conta_descanso();
     break;  
     case  FIM:
-      escreve_display("  !!!FESHOW!!!");
-    toca_alerta_repeticoes_programado();
-    toca_alerta_repeticoes_programado();
-    toca_alerta_repeticoes_programado();
+      BT.println("  !!!FESHOW!!!");
+    ////toca_alerta_repeticoes_programado();
       delay(3000);
     break;  
   }
-  //Serial.println(modo_atual);
-  verifica_teclado();
+  ////BT.println(modo_atual);//não da pra ficar enviando as paradas assim dentro do loop
+  //verifica_teclado();
 }
