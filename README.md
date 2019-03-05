@@ -8,3 +8,4 @@ será escrito desde o inicio visando atender os requesitos.
 O EGA device deve enviar um registro a cada fim de curso(metade do movimento completo), cada registro deve conter a repetição
 da qual ele faz parte(dois registros por repetição), a amplitude do movimento(Ticks do encoder) e o tempo para realização
 (obtido pela função milis()). Formato NRepetição;Amplitude;Tempo. 
+fabio 
