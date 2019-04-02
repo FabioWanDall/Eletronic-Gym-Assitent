@@ -21,8 +21,10 @@ int minimumMovement = 5; //define qual o movimento minimo no sentido anti-horari
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("The System is Alive");
-  
+  //Serial.println("The System is Alive");
+  Serial.println("CLEARDATA");            // Reset da comunicação serial
+  Serial.println("LABEL,Repeticao,Movimento,Tempo(ms)");   // Nomeia as colunas
+
   //Interrupção
   PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
   PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
@@ -67,11 +69,12 @@ void increment_repetitions_counter(){
     if (direction)//só incrementa execucao se for no sentido horario para nao duplicar
       repetitionsCounter++;
     positionWhenChangeDirection = position;//depois de voltar define um novo ponto de inicio do movimento 
-
+    
+    Serial.print("DATA,");
     Serial.print(repetitionsCounter);
-    Serial.print(";");
+    Serial.print(",");
     Serial.print(movement);
-    Serial.print(";");
+    Serial.print(",");
     Serial.println(millis()-lastChangeDirectionTime);
   }  
 }
