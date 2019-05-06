@@ -20,11 +20,12 @@ int minimumMovement = 5; //define qual o movimento minimo no sentido anti-horari
 //int numero_repeticoes_programado //talvez não se usa = 5; //define a quantidade de repeticoes que deverao ser executadas          (PODERA SER ALTERADA PELO USUARIO)
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(38400);
   //Serial.println("The System is Alive");
   Serial.println("CLEARDATA");            // Reset da comunicação serial
   Serial.println("LABEL,Repeticao,Movimento,Tempo(ms)");   // Nomeia as colunas
 
+  encoder.setPosition(initialPosition); //Aquele velho probleminha de convesão
   //Interrupção
   PCICR |= (1 << PCIE1);    // This enables Pin Change Interrupt 1 that covers the Analog input pins or Port C.
   PCMSK1 |= (1 << PCINT10) | (1 << PCINT11);  // This enables the interrupt for pin 2 and 3 of Port C.
@@ -101,4 +102,5 @@ boolean timeout(){
 void loop() {
   // put your main code here, to run repeatedly:
   repetitions_counter();
+  //Serial.println(encoder.getPosition());
 }
