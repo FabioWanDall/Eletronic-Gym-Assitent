@@ -1,7 +1,11 @@
 import serial
 from pynput import keyboard
-
+import os
 running = True
+
+Name = input("Nome: ")
+Serie = input("Série: ")
+print(Name, Serie)
 
 def on_press(key):
   global running
@@ -12,13 +16,32 @@ def on_press(key):
 listener = keyboard.Listener(on_press=on_press)
 listener.start()
 
-outfile = open('test.csv', 'wb')
+os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Coleta de dados EGA')
+outfile = open(Name+'/'+Serie+'.csv', 'wb')
+bufData = b''
+# possition = ''
+# newPosition = ''
+# clockwise = True
+# coutRepetition = 0
 
 with serial.Serial('COM5', 115200, timeout=1) as ser:
   while running:
     data = ser.read()
-    outfile.write(data)
-    print(data)
+    if (data != b'\n'):
+      bufData += data
+    else:
+      outfile.write(bufData)
+      dataDecoded = bufData.decode()
+      print(dataDecoded)
+      newPosition = dataDecoded.split(",")[0]
+      if (position < newPosition) and not clockwise:
+        clockwise = True
+        coutRepetition += 1
+      else:
+        clockwise = False
+      print(newPosition)
+      bufData = b''
+    
 
 outfile.close()
 listener.stop()
@@ -26,7 +49,7 @@ listener.stop()
 import csv
 import matplotlib.pyplot as plt
 
-fil = open('test.csv', 'r')
+fil = open(Name+'/'+Serie+'.csv', 'r')
 csv_reader = csv.reader(fil, delimiter=',')
 x = list()
 y = list()

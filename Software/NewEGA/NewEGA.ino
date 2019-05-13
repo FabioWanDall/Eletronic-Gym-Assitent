@@ -20,7 +20,7 @@ int minimumMovement = 5; //define qual o movimento minimo no sentido anti-horari
 //int numero_repeticoes_programado //talvez não se usa = 5; //define a quantidade de repeticoes que deverao ser executadas          (PODERA SER ALTERADA PELO USUARIO)
 
 void setup() {
-  Serial.begin(38400);
+  Serial.begin(115200);
   //Serial.println("The System is Alive");
   Serial.println("CLEARDATA");            // Reset da comunicação serial
   Serial.println("LABEL,Repeticao,Movimento,Tempo(ms)");   // Nomeia as colunas
