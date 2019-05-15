@@ -1,7 +1,14 @@
 import csv
 import matplotlib.pyplot as plt
+import os
 
-fil = open('test.csv', 'r')
+Name = input("Nome: ")
+Serie = input("Série: ")
+print(Name, Serie)
+
+os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Coleta de dados EGA')
+fil = open(Name+'/'+Serie+'.csv', 'r')
+
 csv_reader = csv.reader(fil, delimiter=',')
 x = list()
 y = list()

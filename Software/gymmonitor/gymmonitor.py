@@ -1,11 +1,14 @@
 import serial
 from pynput import keyboard
 import os
-running = True
 
 Name = input("Nome: ")
 Serie = input("Série: ")
 print(Name, Serie)
+
+mm = 5 #minimumMovement
+position=newPosition=coutRepetition= 0
+running=clockwise = True
 
 def on_press(key):
   global running
@@ -19,10 +22,6 @@ listener.start()
 os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Coleta de dados EGA')
 outfile = open(Name+'/'+Serie+'.csv', 'wb')
 bufData = b''
-# possition = ''
-# newPosition = ''
-# clockwise = True
-# coutRepetition = 0
 
 with serial.Serial('COM5', 115200, timeout=1) as ser:
   while running:
@@ -33,15 +32,15 @@ with serial.Serial('COM5', 115200, timeout=1) as ser:
       outfile.write(bufData)
       dataDecoded = bufData.decode()
       print(dataDecoded)
-      newPosition = dataDecoded.split(",")[0]
-      if (position < newPosition) and not clockwise:
-        clockwise = True
-        coutRepetition += 1
-      else:
+      newPosition = int(dataDecoded.split(",")[0])
+      if (position > newPosition) and clockwise:
         clockwise = False
-      print(newPosition)
+        coutRepetition += 1
+        print(coutRepetition)
+      elif (position < newPosition):
+        clockwise = True
+      position = newPosition
       bufData = b''
-    
 
 outfile.close()
 listener.stop()
