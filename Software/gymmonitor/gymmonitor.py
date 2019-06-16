@@ -19,8 +19,8 @@ def on_press(key):
 listener = keyboard.Listener(on_press=on_press)
 listener.start()
 
-os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Coleta de dados EGA')
-with open(Name+'/'+Serie+'.csv', 'wb') as outfile:
+os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/dados EGA')
+with open(Serie+'.csv', 'wb') as outfile:
   bufData = b''
 
   with serial.Serial('COM5', 115200, timeout=1) as ser:
@@ -58,7 +58,7 @@ listener.stop()
 import csv
 import matplotlib.pyplot as plt
 
-fil = open(Name+'/'+Serie+'.csv', 'r')
+fil = open(Serie+'.csv', 'r')
 csv_reader = csv.reader(fil, delimiter=',')
 x = list()
 y = list()

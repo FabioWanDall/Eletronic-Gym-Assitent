@@ -6,7 +6,7 @@ Name = input("Nome: ")
 Serie = input("Série: ")
 print(Name, Serie)
 
-os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Coleta de dados EGA')
+os.chdir('C:/Users/FabioWanDall/OneDrive - TIGRE S.A/Dados EGA/Coletas/Fabio')
 fil = open(Name+'/'+Serie+'.csv', 'r')
 
 csv_reader = csv.reader(fil, delimiter=',')
